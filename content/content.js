@@ -449,6 +449,76 @@
     panel.querySelector("#tts-ai-btn-settings").addEventListener("click", openQuickSettingsModal);
     panel.querySelector("#tts-ai-btn-guide").addEventListener("click", openTaxonomyGuideModal);
 
+    // --- Draggable panel: grab the header to reposition it anywhere on screen ---
+    (function enableDrag() {
+      const handle = panel.querySelector("#tts-ai-header-drag");
+      const STORAGE_KEY = "ttsCopilotPos";
+      let dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+      // Switch from the default bottom/right anchoring to explicit left/top,
+      // clamped so the panel always stays fully within the viewport.
+      function applyPosition(left, top) {
+        const w = panel.offsetWidth, h = panel.offsetHeight;
+        left = Math.max(0, Math.min(left, window.innerWidth - w));
+        top = Math.max(0, Math.min(top, window.innerHeight - h));
+        panel.style.left = left + "px";
+        panel.style.top = top + "px";
+        panel.style.right = "auto";
+        panel.style.bottom = "auto";
+      }
+
+      // Restore a previously saved position across page loads.
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+        if (saved && Number.isFinite(saved.left) && Number.isFinite(saved.top)) {
+          applyPosition(saved.left, saved.top);
+        }
+      } catch (_) {}
+
+      function onMouseMove(e) {
+        if (!dragging) return;
+        applyPosition(startLeft + (e.clientX - startX), startTop + (e.clientY - startY));
+      }
+
+      function onMouseUp() {
+        if (!dragging) return;
+        dragging = false;
+        panel.style.transition = "";
+        document.body.style.userSelect = "";
+        handle.classList.remove("tts-ai-dragging");
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            left: parseInt(panel.style.left, 10) || 0,
+            top: parseInt(panel.style.top, 10) || 0
+          }));
+        } catch (_) {}
+      }
+
+      handle.addEventListener("mousedown", (e) => {
+        // Left-button only, and never start a drag from the header control buttons.
+        if (e.button !== 0 || e.target.closest(".tts-ai-icon-btn")) return;
+        dragging = true;
+        const rect = panel.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY;
+        startLeft = rect.left; startTop = rect.top;
+        panel.style.transition = "none"; // follow the cursor without easing lag
+        document.body.style.userSelect = "none";
+        handle.classList.add("tts-ai-dragging");
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+        e.preventDefault();
+      });
+
+      // Keep it on-screen if the window is later resized smaller.
+      window.addEventListener("resize", () => {
+        if (panel.style.left) {
+          applyPosition(parseInt(panel.style.left, 10) || 0, parseInt(panel.style.top, 10) || 0);
+        }
+      });
+    })();
+
     // Load saved preferences
     chrome.storage.sync.get(["autoRunOnNext", "autoPlayAudio", "styleSpanPref"], (items) => {
       if (items.autoRunOnNext !== undefined) {

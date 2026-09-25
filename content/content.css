@@ -56,8 +56,12 @@
   padding: 12px 16px;
   background: rgba(30, 41, 59, 0.9);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
+  cursor: move;
   user-select: none;
+}
+
+.tts-ai-header.tts-ai-dragging {
+  cursor: grabbing;
 }
 
 .tts-ai-logo-group {
