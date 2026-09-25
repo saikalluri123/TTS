@@ -14,18 +14,45 @@ function resolveGeminiModel(m) {
 }
 
 // Gemini flash models are shared free-tier capacity and intermittently return
-// 503 (overloaded) or 429 (rate limited). These are transient, so retry with a
-// short escalating backoff before surfacing the error to the user.
+// 503 (overloaded). That IS transient, so retry with a short escalating backoff.
+// 429 (RESOURCE_EXHAUSTED) is a quota/rate limit, not overload — retrying quickly
+// just burns the small free-tier allowance, so we surface it instead of retrying.
 async function fetchGeminiWithRetry(url, options, { retries = 3, baseDelay = 1200 } = {}) {
   let resp;
   for (let attempt = 0; attempt <= retries; attempt++) {
     resp = await fetch(url, options);
-    if (resp.status !== 503 && resp.status !== 429) return resp;
+    if (resp.status !== 503) return resp;
     if (attempt < retries) {
       await new Promise((r) => setTimeout(r, baseDelay * (attempt + 1)));
     }
   }
-  return resp; // last (still-transient) response; caller reads the body
+  return resp; // last (still-overloaded) response; caller reads the body
+}
+
+// Turn a Gemini error body into a short, actionable message for the UI.
+function describeGeminiError(status, errorText) {
+  let msg = errorText, retrySecs = null, limit = null;
+  try {
+    const err = JSON.parse(errorText).error || {};
+    msg = err.message || errorText;
+    for (const d of err.details || []) {
+      if ((d["@type"] || "").endsWith("RetryInfo") && d.retryDelay) {
+        retrySecs = Math.ceil(parseFloat(d.retryDelay));
+      }
+    }
+    const m = /limit:\s*(\d+)/.exec(msg);
+    if (m) limit = m[1];
+  } catch (_) {}
+
+  if (status === 429) {
+    const wait = retrySecs ? `~${retrySecs}s` : "a bit";
+    const cap = limit ? ` (free-tier limit is ${limit}/day for this model)` : "";
+    return `Free-tier quota reached${cap}. Wait ${wait} and retry, switch to a "Lite" model (separate, larger free quota), or enable billing.`;
+  }
+  if (status === 503) {
+    return "Gemini is temporarily overloaded (503). Your key & model are fine — please try again in a moment.";
+  }
+  return msg;
 }
 
 const SYSTEM_PROMPT = `# SYSTEM PROMPT: Automated TTS Audio-Transcript & Emotion Tagging Reviewer
@@ -331,14 +358,14 @@ Perform the full audio validation and transcript cleanup. Listen to the audio cl
 
   if (!response.ok) {
     const errorText = await response.text();
+    if (response.status === 503 || response.status === 429) {
+      throw new Error(describeGeminiError(response.status, errorText));
+    }
     let parsedErr = errorText;
     try {
       const jsonErr = JSON.parse(errorText);
       parsedErr = jsonErr.error?.message || errorText;
     } catch (_) {}
-    if (response.status === 503 || response.status === 429) {
-      throw new Error(`Gemini is temporarily overloaded (${response.status}). Your key & model are fine — please try again in a moment.`);
-    }
     throw new Error(`Gemini Error (${response.status}): ${parsedErr}`);
   }
 
@@ -847,10 +874,11 @@ async function testProviderConnection(provider, apiKey, model, customBaseUrl) {
         })
       });
       if (!resp.ok) {
+        const t = await resp.text();
         if (resp.status === 503 || resp.status === 429) {
-          throw new Error(`Gemini is busy (${resp.status}). Your key & model are valid — click Test again in a moment.`);
+          throw new Error(describeGeminiError(resp.status, t));
         }
-        throw new Error(`Gemini: ${resp.status} ${await resp.text()}`);
+        throw new Error(`Gemini: ${resp.status} ${t}`);
       }
       return true;
     }
