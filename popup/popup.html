@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTS Review AI Assistant</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="popup-header">
+      <div class="header-logo-row">
+        <div class="logo-icon">🎙️</div>
+        <div>
+          <h1 class="header-title">TTS Review Copilot</h1>
+          <p class="header-subtitle">AI Audio Validator & Emotion Tagger</p>
+        </div>
+      </div>
+      <div id="status-pill" class="status-pill offline">Offline</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="popup-body">
+
+      <!-- Provider Tabs -->
+      <section class="card provider-card">
+        <div class="card-label" style="margin-bottom: 8px;">AI Provider</div>
+        <div class="provider-tabs" id="provider-tabs">
+          <button class="provider-tab active" data-provider="gemini">🔷 Gemini</button>
+          <button class="provider-tab" data-provider="openai">🟢 OpenAI</button>
+          <button class="provider-tab" data-provider="groq">⚡ Groq</button>
+          <button class="provider-tab" data-provider="openrouter">🌐 OpenRouter</button>
+          <button class="provider-tab" data-provider="custom">🔧 Custom</button>
+        </div>
+      </section>
+
+      <!-- Gemini Config -->
+      <section class="card provider-config" id="config-gemini">
+        <div class="card-header">
+          <label class="card-label">Gemini API Key</label>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" class="link-small">Get Free Key ↗</a>
+        </div>
+        <div class="input-with-button">
+          <input type="password" id="gemini-key" placeholder="AIzaSy..." autocomplete="off">
+          <button type="button" class="btn-icon toggle-vis" data-target="gemini-key">👁️</button>
+        </div>
+        <label class="card-label" for="gemini-model">Model</label>
+        <select id="gemini-model" class="custom-select">
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended – Native Audio)</option>
+          <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+        </select>
+        <p class="card-hint">Free tier. Sends raw audio waveform for native vocal emotion analysis.</p>
+      </section>
+
+      <!-- OpenAI Config -->
+      <section class="card provider-config" id="config-openai" style="display:none;">
+        <div class="card-header">
+          <label class="card-label">OpenAI API Key</label>
+          <a href="https://platform.openai.com/api-keys" target="_blank" class="link-small">Get Key ↗</a>
+        </div>
+        <div class="input-with-button">
+          <input type="password" id="openai-key" placeholder="sk-..." autocomplete="off">
+          <button type="button" class="btn-icon toggle-vis" data-target="openai-key">👁️</button>
+        </div>
+        <label class="card-label" for="openai-model">Model</label>
+        <select id="openai-model" class="custom-select">
+          <option value="gpt-4o-audio-preview">GPT-4o Audio Preview (Native Audio Input)</option>
+          <option value="gpt-4o">GPT-4o</option>
+          <option value="gpt-4o-mini">GPT-4o Mini</option>
+          <option value="gpt-4.1-mini">GPT-4.1 Mini</option>
+        </select>
+        <p class="card-hint">gpt-4o-audio-preview supports native audio input for emotion detection.</p>
+      </section>
+
+      <!-- Groq Config -->
+      <section class="card provider-config" id="config-groq" style="display:none;">
+        <div class="card-header">
+          <label class="card-label">Groq API Key</label>
+          <a href="https://console.groq.com/keys" target="_blank" class="link-small">Get Free Key ↗</a>
+        </div>
+        <div class="input-with-button">
+          <input type="password" id="groq-key" placeholder="gsk_..." autocomplete="off">
+          <button type="button" class="btn-icon toggle-vis" data-target="groq-key">👁️</button>
+        </div>
+        <label class="card-label" for="groq-model">Model</label>
+        <select id="groq-model" class="custom-select">
+          <option value="llama-3.3-70b-versatile">Llama 3.3 70B Versatile</option>
+          <option value="llama-3.1-8b-instant">Llama 3.1 8B Instant (Fastest)</option>
+          <option value="gemma2-9b-it">Gemma 2 9B</option>
+          <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+        </select>
+        <p class="card-hint">Ultra-fast inference. Audio auto-transcribed via Whisper Large v3, then formatted by LLM.</p>
+      </section>
+
+      <!-- OpenRouter Config -->
+      <section class="card provider-config" id="config-openrouter" style="display:none;">
+        <div class="card-header">
+          <label class="card-label">OpenRouter API Key</label>
+          <a href="https://openrouter.ai/keys" target="_blank" class="link-small">Get Key ↗</a>
+        </div>
+        <div class="input-with-button">
+          <input type="password" id="openrouter-key" placeholder="sk-or-..." autocomplete="off">
+          <button type="button" class="btn-icon toggle-vis" data-target="openrouter-key">👁️</button>
+        </div>
+        <label class="card-label" for="openrouter-model">Model</label>
+        <select id="openrouter-model" class="custom-select">
+          <option value="google/gemini-2.5-flash">Google Gemini 2.5 Flash</option>
+          <option value="openai/gpt-4o">OpenAI GPT-4o</option>
+          <option value="anthropic/claude-sonnet-4">Anthropic Claude Sonnet 4</option>
+          <option value="meta-llama/llama-3.3-70b-instruct">Meta Llama 3.3 70B</option>
+          <option value="deepseek/deepseek-chat-v3-0324">DeepSeek V3</option>
+        </select>
+        <p class="card-hint">Routes to 300+ models from multiple providers through one key.</p>
+      </section>
+
+      <!-- Custom / Local Config -->
+      <section class="card provider-config" id="config-custom" style="display:none;">
+        <label class="card-label">Base URL (OpenAI-compatible)</label>
+        <input type="text" id="custom-url" class="custom-select" placeholder="http://localhost:11434/v1" value="http://localhost:11434/v1">
+        <label class="card-label">API Key (optional)</label>
+        <div class="input-with-button">
+          <input type="password" id="custom-key" placeholder="Leave blank for local..." autocomplete="off">
+          <button type="button" class="btn-icon toggle-vis" data-target="custom-key">👁️</button>
+        </div>
+        <label class="card-label">Model Name</label>
+        <input type="text" id="custom-model" class="custom-select" placeholder="llama3" value="llama3">
+        <p class="card-hint">Works with Ollama, LM Studio, vLLM, LocalAI, or any OpenAI-compatible endpoint.</p>
+      </section>
+
+      <!-- Test Button -->
+      <section class="card" style="padding: 8px 12px;">
+        <div class="action-row-tight">
+          <button type="button" id="btn-test-key" class="btn-secondary">🔌 Test Connection</button>
+          <span id="test-status" class="test-feedback"></span>
+        </div>
+      </section>
+
+      <!-- Review Preferences -->
+      <section class="card">
+        <div class="card-label" style="margin-bottom: 8px;">Automation Preferences</div>
+        <label class="toggle-row">
+          <span class="toggle-text">
+            <strong>Wrap in 19-Emotion Style Span</strong>
+            <small>Outputs &lt;|style_open|&gt;emotion&lt;|style_body|&gt;...&lt;|style_close|&gt;</small>
+          </span>
+          <input type="checkbox" id="pref-style-span" checked>
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-text">
+            <strong>Auto-Review on Next Clip</strong>
+            <small>Runs AI validation automatically when a new clip loads</small>
+          </span>
+          <input type="checkbox" id="pref-autorun">
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-text">
+            <strong>Auto-Play Audio</strong>
+            <small>Plays clip automatically when validation finishes</small>
+          </span>
+          <input type="checkbox" id="pref-autoplay">
+        </label>
+      </section>
+
+      <!-- Shortcuts Reference -->
+      <section class="card shortcuts-card">
+        <div class="card-label">Quick Shortcuts</div>
+        <div class="shortcut-list">
+          <div class="shortcut-item">
+            <span class="shortcut-name">AI Auto-Review Current Clip</span>
+            <kbd>Alt + A</kbd>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-name">Play / Pause Audio</span>
+            <kbd>Alt + P</kbd>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="popup-footer">
+      <button type="button" id="btn-save" class="btn-primary">Save Settings</button>
+      <div id="save-msg" class="save-msg"></div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

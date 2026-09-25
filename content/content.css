@@ -1,0 +1,467 @@
+/* TTS Review Pro & AI Auto-Tag - Content Styles */
+
+:root {
+  --tts-ai-bg: rgba(15, 23, 42, 0.94);
+  --tts-ai-card-bg: rgba(30, 41, 59, 0.85);
+  --tts-ai-border: rgba(59, 130, 246, 0.25);
+  --tts-ai-border-hover: rgba(59, 130, 246, 0.55);
+  --tts-ai-primary: #3b82f6;
+  --tts-ai-primary-glow: rgba(59, 130, 246, 0.4);
+  --tts-ai-accent: #8b5cf6;
+  --tts-ai-success: #10b981;
+  --tts-ai-warning: #f59e0b;
+  --tts-ai-danger: #ef4444;
+  --tts-ai-text: #f8fafc;
+  --tts-ai-text-dim: #94a3b8;
+  --tts-ai-radius: 12px;
+  --tts-ai-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Floating AI Assistant Bar / Dock */
+#tts-ai-copilot-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 420px;
+  max-width: calc(100vw - 48px);
+  max-height: 85vh;
+  background: var(--tts-ai-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--tts-ai-border);
+  border-radius: var(--tts-ai-radius);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 20px var(--tts-ai-primary-glow);
+  z-index: 999999;
+  font-family: var(--tts-ai-font);
+  color: var(--tts-ai-text);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#tts-ai-copilot-panel.minimized {
+  width: auto;
+  max-height: 52px;
+  border-radius: 26px;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Panel Header */
+.tts-ai-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(30, 41, 59, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  user-select: none;
+}
+
+.tts-ai-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tts-ai-badge-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px var(--tts-ai-primary-glow);
+  font-size: 15px;
+}
+
+.tts-ai-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tts-ai-version {
+  font-size: 10px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.tts-ai-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tts-ai-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--tts-ai-text-dim);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 14px;
+}
+
+.tts-ai-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Panel Body */
+.tts-ai-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: calc(85vh - 54px);
+}
+
+#tts-ai-copilot-panel.minimized .tts-ai-body {
+  display: none;
+}
+
+/* Main Action Bar */
+.tts-ai-action-row {
+  display: flex;
+  gap: 8px;
+}
+
+.tts-ai-btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px var(--tts-ai-primary-glow);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tts-ai-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--tts-ai-primary-glow);
+  filter: brightness(1.1);
+}
+
+.tts-ai-btn-primary:active {
+  transform: translateY(1px);
+}
+
+.tts-ai-btn-primary.loading {
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.tts-ai-btn-secondary {
+  background: var(--tts-ai-card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--tts-ai-text);
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.tts-ai-btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Status Banner */
+.tts-ai-status-banner {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tts-ai-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #64748b;
+  flex-shrink: 0;
+}
+
+.tts-ai-status-dot.active {
+  background: var(--tts-ai-success);
+  box-shadow: 0 0 8px var(--tts-ai-success);
+}
+
+.tts-ai-status-dot.working {
+  background: var(--tts-ai-warning);
+  animation: tts-pulse 1.2s infinite;
+}
+
+.tts-ai-status-dot.error {
+  background: var(--tts-ai-danger);
+}
+
+@keyframes tts-pulse {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+/* Result / Review Notes Card */
+.tts-ai-notes-card {
+  background: var(--tts-ai-card-bg);
+  border: 1px solid var(--tts-ai-border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tts-ai-notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tts-ai-notes-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--tts-ai-text-dim);
+}
+
+.tts-ai-emotion-pill {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(59, 130, 246, 0.25));
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  color: #c084fc;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tts-ai-note-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+}
+
+.tts-ai-note-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--tts-ai-text-dim);
+}
+
+.tts-ai-note-val {
+  color: #e2e8f0;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.tts-ai-preview-box {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  color: #93c5fd;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 90px;
+  overflow-y: auto;
+}
+
+/* Quick Tools Bar (Pills) */
+.tts-ai-subhead {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tts-ai-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.tts-ai-pills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 100px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.tts-ai-pill-btn {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.tts-ai-pill-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  color: #fff;
+}
+
+.tts-ai-pill-btn.emotion-pill:hover {
+  background: rgba(139, 92, 246, 0.25);
+  border-color: #a855f7;
+  color: #e9d5ff;
+}
+
+/* Footer / Quick Toggles */
+.tts-ai-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11px;
+  color: var(--tts-ai-text-dim);
+}
+
+.tts-ai-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tts-ai-toggle-label input {
+  cursor: pointer;
+  accent-color: var(--tts-ai-primary);
+}
+
+/* Inline Injected Button into Page */
+.tts-ai-page-quickbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px dashed rgba(59, 130, 246, 0.4);
+}
+
+.tts-ai-inline-btn {
+  background: linear-gradient(135deg, #1d4ed8, #6d28d9);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.tts-ai-inline-btn:hover {
+  filter: brightness(1.15);
+}
+
+/* Modal for Quick Key Entry */
+.tts-ai-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tts-ai-modal {
+  background: #0f172a;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  width: 380px;
+  color: #fff;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+.tts-ai-input {
+  width: 100%;
+  padding: 8px 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.tts-ai-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.tts-ai-modal-large {
+  width: 580px;
+  max-width: calc(100vw - 40px);
+}
+
+.tts-ai-guide-card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.15s ease;
+}
+
+.tts-ai-guide-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background: rgba(30, 41, 59, 0.95);
+}
+

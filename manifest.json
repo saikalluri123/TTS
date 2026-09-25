@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "TTS Review AI Auto-Validator & Emotion Tagger",
+  "version": "1.0.0",
+  "description": "Automated verbatim validation, event tag insertion, and 19-emotion style wrapping for TTS Audio Reviews on tts-review.sabi.com.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://tts-review.sabi.com/*",
+    "https://*.sabi.com/*",
+    "http://localhost:*/*",
+    "http://127.0.0.1:*/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.openai.com/*",
+    "https://api.groq.com/*",
+    "https://api.anthropic.com/*",
+    "https://openrouter.ai/*",
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://tts-review.sabi.com/*",
+        "https://*.sabi.com/*",
+        "http://localhost:*/*",
+        "http://127.0.0.1:*/*"
+      ],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "TTS Review AI Assistant"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "commands": {
+    "auto_review": {
+      "suggested_key": {
+        "default": "Alt+A"
+      },
+      "description": "Trigger AI Auto-Review on current clip"
+    },
+    "toggle_playback": {
+      "suggested_key": {
+        "default": "Alt+P"
+      },
+      "description": "Play or pause current audio clip"
+    }
+  }
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTS Review - Portal Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="brand">TTS Review</div>
+      <nav class="nav-links">
+        <a href="#" class="nav-tab">Dashboard</a>
+        <a href="#" class="nav-tab active">Review</a>
+      </nav>
+    </div>
+    <div class="nav-right">
+      <div class="theme-toggles">
+        <button class="theme-btn">Light</button>
+        <button class="theme-btn active">Dark</button>
+        <button class="theme-btn">System</button>
+      </div>
+      <span class="user-email">saiprasad.kalluri@gmail.com</span>
+      <button class="btn-subtle">Password</button>
+      <button class="btn-logout">Logout</button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+    <h1 class="page-title">Audio Review</h1>
+
+    <div class="review-grid">
+      <!-- Left Column: Audio & Original Transcript -->
+      <section class="card left-card">
+        <div class="card-header-row">
+          <h2 class="clip-title" id="current-clip-title">Clip: ZyG8FSeTFKA_speaker_0_1340</h2>
+          <div class="clip-nav-buttons">
+            <button id="btn-prev-clip" class="btn-clip-nav" title="Previous Sample">&larr; Prev</button>
+            <span id="clip-counter" style="font-size: 12px; color: #94a3b8;">1 / 3</span>
+            <button id="btn-next-clip" class="btn-clip-nav" title="Next Sample">Next &rarr;</button>
+          </div>
+        </div>
+
+        <div class="metadata-block">
+          <p><strong>Speaker:</strong> <span id="meta-speaker">ZyG8FSeTFKA_speaker_0</span></p>
+          <p><strong>Source:</strong> <span id="meta-source">batch1_movie_yt</span></p>
+          <p><strong>Duration:</strong> <span id="meta-duration">3.44s</span></p>
+        </div>
+
+        <div class="audio-player-wrapper">
+          <audio id="audio-player" controls src="sample.wav"></audio>
+        </div>
+
+        <div class="original-transcript-section">
+          <h3>Original Transcript</h3>
+          <div class="original-transcript-box" id="original-transcript-content">
+            for a ten dollar pass verizon will pick this up here
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Your Review -->
+      <section class="card right-card">
+        <h2 class="section-title">Your Review</h2>
+
+        <div class="field-group">
+          <label class="field-label" for="corrected-transcript">Corrected Transcript</label>
+          <textarea id="corrected-transcript" rows="6" placeholder="Enter corrected transcript...">for a ten dollar pass verizon will pick this up here</textarea>
+          <div class="sub-hint">No tags — negative sample</div>
+        </div>
+
+        <!-- Event Tag Buttons -->
+        <div class="tag-section">
+          <div class="tag-section-title">INSERT EVENT AT CURSOR</div>
+          <div class="tag-pill-container" id="events-container">
+            <button type="button" class="portal-tag-btn" data-tag="laugh">laugh</button>
+            <button type="button" class="portal-tag-btn" data-tag="chuckle">chuckle</button>
+            <button type="button" class="portal-tag-btn" data-tag="giggle">giggle</button>
+            <button type="button" class="portal-tag-btn" data-tag="breath">breath</button>
+            <button type="button" class="portal-tag-btn" data-tag="inhale">inhale</button>
+            <button type="button" class="portal-tag-btn" data-tag="exhale">exhale</button>
+            <button type="button" class="portal-tag-btn" data-tag="sigh">sigh</button>
+            <button type="button" class="portal-tag-btn" data-tag="sniff">sniff</button>
+            <button type="button" class="portal-tag-btn" data-tag="cough">cough</button>
+            <button type="button" class="portal-tag-btn" data-tag="throat_clear">throat_clear</button>
+            <button type="button" class="portal-tag-btn" data-tag="lip_smack">lip_smack</button>
+            <button type="button" class="portal-tag-btn" data-tag="gulp">gulp</button>
+            <button type="button" class="portal-tag-btn" data-tag="gasp">gasp</button>
+            <button type="button" class="portal-tag-btn" data-tag="yawn">yawn</button>
+            <button type="button" class="portal-tag-btn" data-tag="snort">snort</button>
+            <button type="button" class="portal-tag-btn" data-tag="cry">cry</button>
+            <button type="button" class="portal-tag-btn" data-tag="woo">woo</button>
+            <button type="button" class="portal-tag-btn" data-tag="hum_tune">hum_tune</button>
+            <button type="button" class="portal-tag-btn" data-tag="tsk">tsk</button>
+            <button type="button" class="portal-tag-btn" data-tag="um">um</button>
+            <button type="button" class="portal-tag-btn" data-tag="uh">uh</button>
+          </div>
+        </div>
+
+        <!-- Emotion Span Buttons -->
+        <div class="tag-section">
+          <div class="tag-section-title">START EMOTION SPAN AT CURSOR</div>
+          <div class="tag-pill-container" id="emotions-container">
+            <button type="button" class="portal-tag-btn emotion" data-emotion="angry">angry</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="annoyed">annoyed</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="awe">awe</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="curious">curious</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="excited">excited</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="fearful">fearful</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="flirty">flirty</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="joyful">joyful</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="loud">loud</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="menacing">menacing</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="mischievously">mischievously</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="nervous">nervous</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="sad">sad</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="sarcastic">sarcastic</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="smug">smug</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="surprised">surprised</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="tender">tender</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="thoughtful">thoughtful</button>
+            <button type="button" class="portal-tag-btn emotion" data-emotion="whispers">whispers</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" id="btn-save-review" style="background:#2563eb; color:white; border:none; padding:10px 20px; border-radius:6px; font-weight:600; cursor:pointer;">
+            Submit Review & Next &rarr;
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Sample Queue
+    const samples = [
+      {
+        id: "ZyG8FSeTFKA_speaker_0_1340",
+        speaker: "ZyG8FSeTFKA_speaker_0",
+        source: "batch1_movie_yt",
+        duration: "3.44s",
+        transcript: "for a ten dollar pass verizon will pick this up here"
+      },
+      {
+        id: "UfcPodcast_speaker_1_0042",
+        speaker: "Joe_Rogan_guest_1",
+        source: "batch2_ufc_podcast",
+        duration: "4.12s",
+        transcript: "i m telling you it s crazy he doesn t even care about that"
+      },
+      {
+        id: "KyivReport_speaker_0_0891",
+        speaker: "KyivIndependent_reporter_0",
+        source: "batch3_news_feed",
+        duration: "5.20s",
+        transcript: "kyiv independent confirmed they re preparing the report today"
+      }
+    ];
+
+    let currentIndex = 0;
+    const clipTitle = document.getElementById("current-clip-title");
+    const clipCounter = document.getElementById("clip-counter");
+    const metaSpeaker = document.getElementById("meta-speaker");
+    const metaSource = document.getElementById("meta-source");
+    const metaDuration = document.getElementById("meta-duration");
+    const originalBox = document.getElementById("original-transcript-content");
+    const textarea = document.getElementById("corrected-transcript");
+
+    function loadSample(index) {
+      currentIndex = index;
+      const s = samples[currentIndex];
+      clipTitle.textContent = "Clip: " + s.id;
+      clipCounter.textContent = `${currentIndex + 1} / ${samples.length}`;
+      metaSpeaker.textContent = s.speaker;
+      metaSource.textContent = s.source;
+      metaDuration.textContent = s.duration;
+      originalBox.textContent = s.transcript;
+      textarea.value = s.transcript;
+    }
+
+    document.getElementById("btn-prev-clip").addEventListener("click", () => {
+      if (currentIndex > 0) loadSample(currentIndex - 1);
+    });
+
+    document.getElementById("btn-next-clip").addEventListener("click", () => {
+      if (currentIndex < samples.length - 1) loadSample(currentIndex + 1);
+    });
+
+    document.getElementById("btn-save-review").addEventListener("click", () => {
+      alert("Review saved!\n\nSubmitted Content:\n" + textarea.value);
+      if (currentIndex < samples.length - 1) {
+        loadSample(currentIndex + 1);
+      }
+    });
+
+    // Native portal event button handlers
+    document.querySelectorAll(".portal-tag-btn:not(.emotion)").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tag = `<|${btn.dataset.tag}|>`;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.value = textarea.value.slice(0, start) + tag + textarea.value.slice(end);
+        textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+        textarea.focus();
+      });
+    });
+
+    document.querySelectorAll(".portal-tag-btn.emotion").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const emo = btn.dataset.emotion;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const tag = `<|style_open|>${emo}<|style_body|>`;
+        textarea.value = textarea.value.slice(0, start) + tag + textarea.value.slice(end);
+        textarea.selectionStart = textarea.selectionEnd = start + tag.length;
+        textarea.focus();
+      });
+    });
+  </script>
+</body>
+</html>
