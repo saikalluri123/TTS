@@ -62,7 +62,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Populate fields
     if (data.geminiApiKey) document.getElementById("gemini-key").value = data.geminiApiKey;
-    if (data.selectedModel) document.getElementById("gemini-model").value = data.selectedModel;
+    if (data.selectedModel) {
+      const sel = document.getElementById("gemini-model");
+      // Only restore the saved model if it's still an offered (non-retired) option;
+      // otherwise leave the dropdown on its default so users don't see a dead model.
+      if ([...sel.options].some(o => o.value === data.selectedModel)) sel.value = data.selectedModel;
+    }
 
     if (data.openaiApiKey) document.getElementById("openai-key").value = data.openaiApiKey;
     if (data.openaiModel) document.getElementById("openai-model").value = data.openaiModel;

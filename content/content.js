@@ -551,9 +551,9 @@
 
           <label style="font-size:12px; color:#cbd5e1; font-weight:600;">AI Model:</label>
           <select id="tts-modal-model" class="tts-ai-input" style="cursor:pointer;">
-            <option value="gemini-2.5-flash" ${data.selectedModel === 'gemini-2.5-flash' || !data.selectedModel ? 'selected' : ''}>Gemini 2.5 Flash (Recommended - Native Audio)</option>
-            <option value="gemini-2.0-flash" ${data.selectedModel === 'gemini-2.0-flash' ? 'selected' : ''}>Gemini 2.0 Flash (Fast)</option>
-            <option value="gemini-1.5-flash" ${data.selectedModel === 'gemini-1.5-flash' ? 'selected' : ''}>Gemini 1.5 Flash</option>
+            <option value="gemini-3.8-flash" ${data.selectedModel === 'gemini-3.8-flash' || !data.selectedModel ? 'selected' : ''}>Gemini 3.8 Flash (Recommended - Native Audio)</option>
+            <option value="gemini-flash-latest" ${data.selectedModel === 'gemini-flash-latest' ? 'selected' : ''}>Gemini Flash (Latest - auto-updates)</option>
+            <option value="gemini-3.5-flash" ${data.selectedModel === 'gemini-3.5-flash' ? 'selected' : ''}>Gemini 3.5 Flash</option>
           </select>
 
           <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">

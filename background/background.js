@@ -1,6 +1,17 @@
 // Background Service Worker for TTS Review AI Extension
 
-const DEFAULT_MODEL = "gemini-2.5-flash";
+const DEFAULT_MODEL = "gemini-3.8-flash";
+
+// Gemini models that Google has retired for new API keys (they now return 404).
+// Any saved setting pointing at one of these is remapped to the current default so
+// existing users aren't stuck on a dead model after Google's model sunset.
+const RETIRED_GEMINI_MODELS = [
+  "gemini-2.5-flash", "gemini-2.5-pro",
+  "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"
+];
+function resolveGeminiModel(m) {
+  return (!m || RETIRED_GEMINI_MODELS.includes(m)) ? DEFAULT_MODEL : m;
+}
 
 const SYSTEM_PROMPT = `# SYSTEM PROMPT: Automated TTS Audio-Transcript & Emotion Tagging Reviewer
 
@@ -251,7 +262,7 @@ async function handleAudioAnalysis(payload) {
     case "gemini":
     default: {
       const key = storage.geminiApiKey?.trim();
-      const model = storage.selectedModel || DEFAULT_MODEL;
+      const model = resolveGeminiModel(storage.selectedModel);
       if (!key) return runOfflineHeuristic(originalTranscript);
       return handleGeminiAnalysis(enrichedPayload, key, model);
     }
@@ -804,7 +815,7 @@ async function fetchAudioAsBase64(url) {
 async function testProviderConnection(provider, apiKey, model, customBaseUrl) {
   switch (provider || "gemini") {
     case "gemini": {
-      const m = model || DEFAULT_MODEL;
+      const m = resolveGeminiModel(model);
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
       const resp = await fetch(endpoint, {
         method: "POST",
