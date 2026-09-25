@@ -63,7 +63,7 @@ An enterprise-grade Google Chrome Extension designed specifically for **https://
 
 To enable native audio listening and vocal emotion detection:
 1. Click the extension icon 🎙️ in the Chrome toolbar (or click the ⚙️ gear icon on the in-page Copilot widget).
-2. Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. Get a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey). Newly created keys use Google's new format starting with `AQ.` (older `AIzaSy...` keys still work if restricted); this extension supports both.
 3. Paste your key into the **Gemini API Key** field.
 4. Click **Test Connection** &rarr; you should see `✓ Connected!`.
 5. Click **Save Settings**.

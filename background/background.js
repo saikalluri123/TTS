@@ -261,7 +261,10 @@ async function handleAudioAnalysis(payload) {
 // 1. Google Gemini Provider
 async function handleGeminiAnalysis(payload, apiKey, model) {
   const { originalTranscript, audioBase64, mimeType } = payload;
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  // Key is sent via the x-goog-api-key header (not the URL query string) so it works
+  // with both legacy "AIzaSy..." keys and the new "AQ..." auth keys, and avoids leaking
+  // the key through URL logs/scans per Google's API key best practices.
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
   const promptParts = [];
 
@@ -293,7 +296,10 @@ Perform the full audio validation and transcript cleanup. Listen to the audio cl
 
   const response = await fetch(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-goog-api-key": apiKey
+    },
     body: JSON.stringify(requestBody)
   });
 
@@ -799,10 +805,13 @@ async function testProviderConnection(provider, apiKey, model, customBaseUrl) {
   switch (provider || "gemini") {
     case "gemini": {
       const m = model || DEFAULT_MODEL;
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
       const resp = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
         body: JSON.stringify({
           contents: [{ parts: [{ text: 'Respond with JSON: {"status": "OK"}' }] }],
           generationConfig: { responseMimeType: "application/json" }

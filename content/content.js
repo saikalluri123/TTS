@@ -544,7 +544,7 @@
           </div>
           
           <label style="font-size:12px; color:#cbd5e1; font-weight:600;">Google Gemini API Key:</label>
-          <input type="password" id="tts-modal-key" class="tts-ai-input" placeholder="AIzaSy..." value="${data.geminiApiKey || ''}" />
+          <input type="password" id="tts-modal-key" class="tts-ai-input" placeholder="AQ.Ab... or AIzaSy..." value="${data.geminiApiKey || ''}" />
           <p style="font-size:11px; color:#94a3b8; margin:-8px 0 12px 0;">
             A key from <a href="https://aistudio.google.com/" target="_blank" style="color:#60a5fa;">aistudio.google.com</a> is free and enables native audio emotion and speech analysis.
           </p>
