@@ -384,11 +384,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
-  background: rgba(15, 23, 42, 0.6);
-  padding: 6px 10px;
+  margin: 6px 0 10px;
+  /* Solid (not translucent) so the portal's transcript text can never bleed
+     through the bar, and elevated so it isn't underlapped by page content. */
+  background: #0f172a;
+  padding: 8px 10px;
   border-radius: 8px;
-  border: 1px dashed rgba(59, 130, 246, 0.4);
+  border: 1px solid rgba(59, 130, 246, 0.5);
+  position: relative;
+  z-index: 5;
+  box-sizing: border-box;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .tts-ai-inline-btn {

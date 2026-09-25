@@ -272,7 +272,11 @@
       <span style="font-size: 11px; color: #94a3b8; margin-left: auto;">TTS AI Copilot Ready</span>
     `;
 
-    parent.insertBefore(bar, textarea);
+    // Place the bar above the field's label when it lives in the same container,
+    // so it sits clear of any rich-text editor overlay drawn on top of the
+    // textarea (which otherwise causes the bar to overlap the transcript text).
+    const label = textarea.id ? parent.querySelector(`label[for="${textarea.id}"]`) : null;
+    parent.insertBefore(bar, label || textarea);
 
     bar.querySelector("#tts-ai-inline-run-btn").addEventListener("click", (e) => {
       e.preventDefault();
