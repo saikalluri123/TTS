@@ -13,6 +13,21 @@ function resolveGeminiModel(m) {
   return (!m || RETIRED_GEMINI_MODELS.includes(m)) ? DEFAULT_MODEL : m;
 }
 
+// Gemini flash models are shared free-tier capacity and intermittently return
+// 503 (overloaded) or 429 (rate limited). These are transient, so retry with a
+// short escalating backoff before surfacing the error to the user.
+async function fetchGeminiWithRetry(url, options, { retries = 3, baseDelay = 1200 } = {}) {
+  let resp;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    resp = await fetch(url, options);
+    if (resp.status !== 503 && resp.status !== 429) return resp;
+    if (attempt < retries) {
+      await new Promise((r) => setTimeout(r, baseDelay * (attempt + 1)));
+    }
+  }
+  return resp; // last (still-transient) response; caller reads the body
+}
+
 const SYSTEM_PROMPT = `# SYSTEM PROMPT: Automated TTS Audio-Transcript & Emotion Tagging Reviewer
 
 ## Role & System Purpose
@@ -305,7 +320,7 @@ Perform the full audio validation and transcript cleanup. Listen to the audio cl
     }
   };
 
-  const response = await fetch(endpoint, {
+  const response = await fetchGeminiWithRetry(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -321,6 +336,9 @@ Perform the full audio validation and transcript cleanup. Listen to the audio cl
       const jsonErr = JSON.parse(errorText);
       parsedErr = jsonErr.error?.message || errorText;
     } catch (_) {}
+    if (response.status === 503 || response.status === 429) {
+      throw new Error(`Gemini is temporarily overloaded (${response.status}). Your key & model are fine — please try again in a moment.`);
+    }
     throw new Error(`Gemini Error (${response.status}): ${parsedErr}`);
   }
 
@@ -817,7 +835,7 @@ async function testProviderConnection(provider, apiKey, model, customBaseUrl) {
     case "gemini": {
       const m = resolveGeminiModel(model);
       const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`;
-      const resp = await fetch(endpoint, {
+      const resp = await fetchGeminiWithRetry(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -828,7 +846,12 @@ async function testProviderConnection(provider, apiKey, model, customBaseUrl) {
           generationConfig: { responseMimeType: "application/json" }
         })
       });
-      if (!resp.ok) throw new Error(`Gemini: ${resp.status} ${await resp.text()}`);
+      if (!resp.ok) {
+        if (resp.status === 503 || resp.status === 429) {
+          throw new Error(`Gemini is busy (${resp.status}). Your key & model are valid — click Test again in a moment.`);
+        }
+        throw new Error(`Gemini: ${resp.status} ${await resp.text()}`);
+      }
       return true;
     }
     case "openai": {

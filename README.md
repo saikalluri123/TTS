@@ -11,7 +11,7 @@ An enterprise-grade Google Chrome Extension designed specifically for **https://
    - Adds a floating **TTS Review Copilot** panel with real-time vocal cue insights, review notes, emotion pills, and event tag quick-buttons.
    - **React/Vue-Compatible**: Uses native property setters and dispatches `input` / `change` events so your changes are immediately registered by the portal's state management.
 
-2. **Multimodal Audio AI (Google Gemini 2.5 / 2.0 / 1.5 Flash)**:
+2. **Multimodal Audio AI (Google Gemini 3.8 Flash / Flash-Latest / 3.5 Flash)**:
    - Fetches the audio clip from the page and passes it directly to Gemini's native audio model.
    - Listens to the speaker's vocal tone, pitch, pace, pauses, and acoustics to accurately select from the **19 standard emotions**.
    - Accurately identifies point-in-time non-speech events (`<|laugh|>`, `<|chuckle|>`, `<|sigh|>`, `<|throat_clear|>`, `<|lip_smack|>`, `<|um|>`, `<|uh|>`, `<|inhale|>`, `<|exhale|>`).
