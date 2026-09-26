@@ -27,7 +27,6 @@
   function init() {
     applyStealth(isStealthOn()); // restore hidden state before any UI is drawn
     setupInPageWidget();
-    injectInlineQuickAction();
     observeClipChanges();
     listenToBackgroundMessages();
   }
@@ -273,52 +272,6 @@
     showStatus(`Emotion updated to '${emotion}'`, "active");
   }
 
-  // --- Inline Button Injection ---
-  function injectInlineQuickAction() {
-    const textarea = getCorrectedTextarea();
-    if (!textarea || document.getElementById("tts-ai-inline-bar")) return;
-
-    const parent = textarea.parentElement;
-    if (!parent) return;
-
-    const bar = document.createElement("div");
-    bar.id = "tts-ai-inline-bar";
-    bar.className = "tts-ai-page-quickbar";
-    bar.innerHTML = `
-      <button type="button" class="tts-ai-inline-btn" id="tts-ai-inline-run-btn" title="Run AI Auto-Review (Alt+A)">
-        <span>✨</span> AI Auto-Validate (Alt+A)
-      </button>
-      <button type="button" class="tts-ai-pill-btn" id="tts-ai-inline-load-original" title="Copy the page's Original Transcript into this box, verbatim">
-        ⬇ Load Original
-      </button>
-      <button type="button" class="tts-ai-pill-btn" id="tts-ai-inline-toggle-style" title="Switch between Style Span and Clean Text">
-        Toggle Style Wrap
-      </button>
-      <span style="font-size: 11px; color: #94a3b8; margin-left: auto;">TTS AI Copilot Ready</span>
-    `;
-
-    // Place the bar above the field's label when it lives in the same container,
-    // so it sits clear of any rich-text editor overlay drawn on top of the
-    // textarea (which otherwise causes the bar to overlap the transcript text).
-    const label = textarea.id ? parent.querySelector(`label[for="${textarea.id}"]`) : null;
-    parent.insertBefore(bar, label || textarea);
-
-    bar.querySelector("#tts-ai-inline-run-btn").addEventListener("click", (e) => {
-      e.preventDefault();
-      runAutoReview();
-    });
-
-    bar.querySelector("#tts-ai-inline-load-original").addEventListener("click", (e) => {
-      e.preventDefault();
-      loadOriginalIntoCorrected();
-    });
-
-    bar.querySelector("#tts-ai-inline-toggle-style").addEventListener("click", (e) => {
-      e.preventDefault();
-      toggleStyleWrap();
-    });
-  }
-
   // Copy the page's Original Transcript verbatim into the Corrected box, so the
   // reviewer can start from the system-generated text without running the AI.
   function loadOriginalIntoCorrected() {
@@ -386,6 +339,16 @@
           </button>
           <button class="tts-ai-btn-secondary" id="tts-ai-play-btn" title="Toggle Audio Playback (Alt+P)">
             ▶ / ⏸
+          </button>
+        </div>
+
+        <!-- Secondary Actions (moved here from the removed inline bar) -->
+        <div class="tts-ai-action-row">
+          <button class="tts-ai-btn-secondary" id="tts-ai-load-original-btn" title="Copy the page's Original Transcript into the Corrected box, verbatim">
+            ⬇ Load Original
+          </button>
+          <button class="tts-ai-btn-secondary" id="tts-ai-toggle-style-btn" title="Switch between Style Span and Clean Text">
+            Toggle Style Wrap
           </button>
         </div>
 
@@ -488,6 +451,9 @@
         audio.pause();
       }
     });
+
+    panel.querySelector("#tts-ai-load-original-btn").addEventListener("click", loadOriginalIntoCorrected);
+    panel.querySelector("#tts-ai-toggle-style-btn").addEventListener("click", toggleStyleWrap);
 
     // Minimize / Expand
     const minBtn = panel.querySelector("#tts-ai-btn-minimize");
@@ -945,9 +911,6 @@
       if (lastClipIdentifier && currentId !== lastClipIdentifier) {
         lastClipIdentifier = currentId;
         console.log("[TTS AI Reviewer] New clip detected:", currentId);
-        
-        // Check if inline bar exists, re-inject if needed
-        injectInlineQuickAction();
 
         // Check if auto-run on next is enabled
         const autoRunPref = document.getElementById("tts-ai-pref-autorun")?.checked;
