@@ -324,6 +324,7 @@
         </div>
         <div class="tts-ai-controls">
           <button class="tts-ai-icon-btn" id="tts-ai-btn-guide" title="19-Emotion Training Guide & Lookalikes Reference">📖</button>
+          <button class="tts-ai-icon-btn" id="tts-ai-btn-stealth" title="Hide all UI for screen sharing (Alt+H to bring it back)">🙈</button>
           <button class="tts-ai-icon-btn" id="tts-ai-btn-settings" title="Settings / API Key">⚙️</button>
           <button class="tts-ai-icon-btn" id="tts-ai-btn-minimize" title="Minimize / Expand">—</button>
         </div>
@@ -465,6 +466,9 @@
     // Settings & Guide Modals
     panel.querySelector("#tts-ai-btn-settings").addEventListener("click", openQuickSettingsModal);
     panel.querySelector("#tts-ai-btn-guide").addEventListener("click", openTaxonomyGuideModal);
+
+    // Stealth: hide all extension UI for screen sharing (Alt+H brings it back).
+    panel.querySelector("#tts-ai-btn-stealth").addEventListener("click", toggleStealth);
 
     // --- Draggable panel: grab the header to reposition it anywhere on screen ---
     (function enableDrag() {
