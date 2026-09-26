@@ -88,9 +88,9 @@
   }
 
   // --- React / Vue Safe Value Setter ---
-  function updateTextareaValue(textarea, newValue) {
+  function updateTextareaValue(textarea, newValue, { resetScroll = true } = {}) {
     if (!textarea) return;
-    
+
     // Use native prototype descriptor to bypass React 16+ setter interception
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
       window.HTMLTextAreaElement.prototype,
@@ -106,6 +106,17 @@
     // Dispatch standard events so frameworks re-render / recognize change
     textarea.dispatchEvent(new Event("input", { bubbles: true }));
     textarea.dispatchEvent(new Event("change", { bubbles: true }));
+
+    // Writing a long value leaves the caret (and scroll) at the very end, so
+    // the box shows only the tail (e.g. "...<|style_close|>") and the actual
+    // transcript looks missing. Put the caret and scroll back at the start so
+    // the user sees the beginning. rAF re-applies it after any framework re-render.
+    // (Skipped for cursor inserts, which manage their own caret position.)
+    if (resetScroll) {
+      try { textarea.setSelectionRange(0, 0); } catch (_) {}
+      textarea.scrollTop = 0;
+      requestAnimationFrame(() => { textarea.scrollTop = 0; });
+    }
   }
 
   // Insert event tag or text at cursor
@@ -118,7 +129,7 @@
     const currentVal = textarea.value;
 
     const newVal = currentVal.substring(0, startPos) + textToInsert + currentVal.substring(endPos);
-    updateTextareaValue(textarea, newVal);
+    updateTextareaValue(textarea, newVal, { resetScroll: false });
 
     // Reposition cursor
     const newCursor = startPos + textToInsert.length;
