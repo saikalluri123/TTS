@@ -231,6 +231,8 @@ chrome.commands.onCommand.addListener((command) => {
         chrome.tabs.sendMessage(tabs[0].id, { action: "TRIGGER_AUTO_REVIEW" });
       } else if (command === "toggle_playback") {
         chrome.tabs.sendMessage(tabs[0].id, { action: "TOGGLE_PLAYBACK" });
+      } else if (command === "toggle_stealth") {
+        chrome.tabs.sendMessage(tabs[0].id, { action: "TOGGLE_STEALTH" });
       }
     }
   });

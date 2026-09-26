@@ -61,6 +61,12 @@
         "default": "Alt+P"
       },
       "description": "Play or pause current audio clip"
+    },
+    "toggle_stealth": {
+      "suggested_key": {
+        "default": "Alt+H"
+      },
+      "description": "Hide/show all extension UI (stealth mode for screen sharing)"
     }
   }
 }

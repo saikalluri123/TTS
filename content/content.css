@@ -476,3 +476,12 @@
   background: rgba(30, 41, 59, 0.95);
 }
 
+/* Stealth mode (Alt+H): hide every extension node from the page so nothing
+   appears on a shared/presented screen. Covers the floating panel, the inline
+   quick-bar, and any open modal, including UI injected while stealth is on. */
+html[data-tts-stealth="1"] #tts-ai-copilot-panel,
+html[data-tts-stealth="1"] #tts-ai-inline-bar,
+html[data-tts-stealth="1"] .tts-ai-modal-overlay {
+  display: none !important;
+}
+

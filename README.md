@@ -106,3 +106,4 @@ To test the extension offline without logging in:
 | :--- | :--- |
 | **`Alt + A`** | Run AI Auto-Review & Tag on current clip |
 | **`Alt + P`** | Play / Pause audio playback |
+| **`Alt + H`** | Stealth mode — instantly hide/show all extension UI (for screen sharing) |

@@ -25,6 +25,7 @@
 
   // Wait for page elements to mount
   function init() {
+    applyStealth(isStealthOn()); // restore hidden state before any UI is drawn
     setupInPageWidget();
     injectInlineQuickAction();
     observeClipChanges();
@@ -939,8 +940,32 @@
           else audio.pause();
         }
         sendResponse({ received: true });
+      } else if (request.action === "TOGGLE_STEALTH") {
+        toggleStealth();
+        sendResponse({ received: true });
       }
     });
+  }
+
+  // --- Stealth mode: hide every trace of the extension from the page ---
+  // For screen sharing / presenting. When on, the floating panel, the inline
+  // bar, and any open modals are set to display:none so nothing shows on a
+  // shared screen. Toggle with Alt+H. State persists across reloads.
+  const STEALTH_KEY = "ttsStealthOn";
+
+  function applyStealth(on) {
+    // data attribute drives a CSS rule that hides all extension nodes at once,
+    // including UI injected later while stealth is active.
+    document.documentElement.setAttribute("data-tts-stealth", on ? "1" : "0");
+    try { localStorage.setItem(STEALTH_KEY, on ? "1" : "0"); } catch (_) {}
+  }
+
+  function isStealthOn() {
+    try { return localStorage.getItem(STEALTH_KEY) === "1"; } catch (_) { return false; }
+  }
+
+  function toggleStealth() {
+    applyStealth(!isStealthOn());
   }
 
   // Start initialization
