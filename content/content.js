@@ -57,25 +57,35 @@
   }
 
   function getOriginalTranscript() {
-    // Strategy 1: Find element containing header "Original Transcript"
-    const allEls = document.querySelectorAll("h1, h2, h3, h4, h5, h6, div, p, span, label");
+    // Strategy 1: Find the "Original Transcript" heading/label, then read the
+    // text that follows it (next sibling, or the text-bearing node just after).
+    const allEls = document.querySelectorAll("h1, h2, h3, h4, h5, h6, div, p, span, label, strong");
     for (const el of allEls) {
-      if (el.textContent.trim() === "Original Transcript") {
-        // Next element or child of parent
-        let container = el.nextElementSibling;
-        if (!container && el.parentElement) {
-          container = el.parentElement.querySelector("div:not(:first-child), p, span");
+      if (/^original transcript\b/i.test(el.textContent.trim())) {
+        // Prefer a following sibling that carries text.
+        let node = el.nextElementSibling;
+        while (node && !node.textContent.trim()) node = node.nextElementSibling;
+
+        // Otherwise look just below within the shared container.
+        if (!node && el.parentElement) {
+          node = el.parentElement.querySelector("textarea, [contenteditable], p, div, span");
         }
-        if (container) {
-          const txt = container.textContent.trim();
-          if (txt && txt !== "Original Transcript") return txt;
+        if (node) {
+          const txt = (node.tagName === "TEXTAREA" ? node.value : node.textContent).trim();
+          // Guard against grabbing the heading itself.
+          if (txt && !/^original transcript$/i.test(txt)) return txt;
         }
       }
     }
 
-    // Strategy 2: Look for elements with class or data-testid containing "original" or "transcript"
-    const candidate = document.querySelector(".original-transcript, [data-testid='original-transcript'], #original-transcript");
-    if (candidate) return candidate.textContent.trim();
+    // Strategy 2: Look for elements with class/id/data-testid hinting "original".
+    const candidate = document.querySelector(
+      ".original-transcript, [data-testid='original-transcript'], #original-transcript, [class*='original']"
+    );
+    if (candidate) {
+      const txt = (candidate.tagName === "TEXTAREA" ? candidate.value : candidate.textContent).trim();
+      if (txt) return txt;
+    }
 
     return "";
   }
@@ -278,6 +288,9 @@
       <button type="button" class="tts-ai-inline-btn" id="tts-ai-inline-run-btn" title="Run AI Auto-Review (Alt+A)">
         <span>✨</span> AI Auto-Validate (Alt+A)
       </button>
+      <button type="button" class="tts-ai-pill-btn" id="tts-ai-inline-load-original" title="Copy the page's Original Transcript into this box, verbatim">
+        ⬇ Load Original
+      </button>
       <button type="button" class="tts-ai-pill-btn" id="tts-ai-inline-toggle-style" title="Switch between Style Span and Clean Text">
         Toggle Style Wrap
       </button>
@@ -295,10 +308,32 @@
       runAutoReview();
     });
 
+    bar.querySelector("#tts-ai-inline-load-original").addEventListener("click", (e) => {
+      e.preventDefault();
+      loadOriginalIntoCorrected();
+    });
+
     bar.querySelector("#tts-ai-inline-toggle-style").addEventListener("click", (e) => {
       e.preventDefault();
       toggleStyleWrap();
     });
+  }
+
+  // Copy the page's Original Transcript verbatim into the Corrected box, so the
+  // reviewer can start from the system-generated text without running the AI.
+  function loadOriginalIntoCorrected() {
+    const textarea = getCorrectedTextarea();
+    if (!textarea) {
+      showStatus("⚠️ Couldn't find the Corrected Transcript box.", "error");
+      return;
+    }
+    const original = getOriginalTranscript();
+    if (!original) {
+      showStatus("⚠️ Couldn't find an Original Transcript on this page.", "error");
+      return;
+    }
+    updateTextareaValue(textarea, original);
+    showStatus("Loaded the Original Transcript into the box.", "active");
   }
 
   function toggleStyleWrap() {
